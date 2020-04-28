@@ -20,19 +20,19 @@ chan EW_TurnGreen;</declaration>
 
 
 clock t;</declaration>
-		<location id="id0" x="544" y="144">
+		<location id="id0" x="544" y="144" color="#ffc0cb">
 			<name x="485" y="136">Red</name>
 		</location>
-		<location id="id1" x="841" y="144">
+		<location id="id1" x="841" y="144" color="#ffa500">
 			<name x="875" y="136">TurningGreen</name>
 			<label kind="invariant" x="858" y="161">t&lt;5</label>
 		</location>
-		<location id="id2" x="841" y="416">
+		<location id="id2" x="841" y="416" color="#00ff00">
 			<name x="875" y="399">Green</name>
 		</location>
-		<location id="id3" x="546" y="416">
+		<location id="id3" x="546" y="416" color="#ffff00">
 			<name x="442" y="407">TurningRed</name>
-			<label kind="invariant" x="536" y="433">t &lt; 5</label>
+			<label kind="invariant" x="536" y="433">t &lt;5</label>
 		</location>
 		<init ref="id0"/>
 		<transition>
@@ -62,9 +62,11 @@ clock t;</declaration>
 	</template>
 	<template>
 		<name>LightsController</name>
-		<declaration>int[0,2] next = 0;</declaration>
-		<location id="id4" x="-399" y="-289" color="#ff0000">
+		<declaration>int[0,2] next = 0;
+clock time;</declaration>
+		<location id="id4" x="-399" y="-289" color="#ffc0cb">
 			<name x="-409" y="-323">Red</name>
+			<label kind="invariant" x="-459" y="-340">next == 0 || time &lt;= 2</label>
 		</location>
 		<location id="id5" x="476" y="-289" color="#ffa500">
 			<name x="466" y="-323">NS_TurningGreen</name>
@@ -72,7 +74,7 @@ clock t;</declaration>
 		<location id="id6" x="476" y="76" color="#00ff00">
 			<name x="502" y="67">NS_Green</name>
 		</location>
-		<location id="id7" x="-161" y="76">
+		<location id="id7" x="-161" y="76" color="#ffff00">
 			<name x="-195" y="93">NS_TurningRed</name>
 		</location>
 		<location id="id8" x="-1292" y="-289" color="#ffa500">
@@ -81,57 +83,66 @@ clock t;</declaration>
 		<location id="id9" x="-1292" y="76" color="#00ff00">
 			<name x="-1385" y="67">EW_Green</name>
 		</location>
-		<location id="id10" x="-680" y="76">
+		<location id="id10" x="-680" y="76" color="#ffff00">
 			<name x="-740" y="93">EW_TurningRed</name>
 		</location>
-		<location id="id11" x="77" y="-289">
+		<location id="id11" x="77" y="-289" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id12" x="85" y="76">
+		<location id="id12" x="85" y="76" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id13" x="-917" y="-289">
+		<location id="id13" x="-917" y="-289" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id14" x="-917" y="76">
+		<location id="id14" x="-917" y="76" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id15" x="-688" y="-289">
+		<location id="id15" x="-688" y="-289" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id16" x="-170" y="-289">
-		</location>
-		<location id="id17" x="-518" y="-59">
-		</location>
-		<location id="id18" x="-1105" y="76">
+		<location id="id16" x="-170" y="-289" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id19" x="280" y="76">
+		<location id="id17" x="-518" y="-59" color="#ffffff">
+		</location>
+		<location id="id18" x="-1105" y="76" color="#ffffff">
 			<committed/>
 		</location>
-		<location id="id20" x="425" y="-119">
+		<location id="id19" x="280" y="76" color="#ffffff">
+			<committed/>
 		</location>
-		<location id="id21" x="527" y="-119">
+		<location id="id20" x="425" y="-119" color="#ffffff">
 		</location>
-		<location id="id22" x="-1351" y="-161">
+		<location id="id21" x="527" y="-119" color="#ffffff">
 		</location>
-		<location id="id23" x="-1232" y="-153">
+		<location id="id22" x="-1351" y="-161" color="#ffffff">
 		</location>
-		<location id="id24" x="-314" y="-59">
+		<location id="id23" x="-1232" y="-153" color="#ffffff">
 		</location>
-		<location id="id25" x="-229" y="-93">
+		<location id="id24" x="-314" y="-59" color="#ffffff">
 		</location>
-		<location id="id26" x="-578" y="-102">
+		<location id="id25" x="-229" y="-93" color="#ffffff">
+		</location>
+		<location id="id26" x="-578" y="-102" color="#ffffff">
+		</location>
+		<location id="id27" x="-399" y="-212" color="#ffffff">
+			<committed/>
 		</location>
 		<init ref="id4"/>
 		<transition>
-			<source ref="id26"/>
+			<source ref="id27"/>
 			<target ref="id4"/>
+			<label kind="assignment" x="-391" y="-255">time = 0</label>
+		</transition>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id27"/>
 			<label kind="synchronisation" x="-560" y="-212">isRed[2]?</label>
 		</transition>
 		<transition>
 			<source ref="id25"/>
-			<target ref="id4"/>
+			<target ref="id27"/>
 			<label kind="synchronisation" x="-297" y="-204">isRed[0]?</label>
 		</transition>
 		<transition>
@@ -146,7 +157,7 @@ clock t;</declaration>
 		</transition>
 		<transition>
 			<source ref="id24"/>
-			<target ref="id4"/>
+			<target ref="id27"/>
 			<label kind="synchronisation" x="-391" y="-170">isRed[1]?</label>
 		</transition>
 		<transition>
@@ -196,14 +207,14 @@ clock t;</declaration>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-586" y="-391">next == 2</label>
+			<label kind="guard" x="-586" y="-391">next == 2 &amp;&amp; time &gt;= 2</label>
 			<label kind="assignment" x="-586" y="-374">next = 0</label>
 			<nail x="-552" y="-348"/>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-314" y="-382">next == 1</label>
+			<label kind="guard" x="-314" y="-382">next == 1 &amp;&amp; time &gt;= 2</label>
 			<label kind="assignment" x="-314" y="-365">next = 0</label>
 			<nail x="-289" y="-340"/>
 		</transition>
@@ -222,19 +233,19 @@ clock t;</declaration>
 		</transition>
 		<transition>
 			<source ref="id17"/>
-			<target ref="id4"/>
+			<target ref="id27"/>
 			<label kind="synchronisation" x="-493" y="-153">isRed[3]?</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-323" y="-289">next == 0</label>
+			<label kind="guard" x="-323" y="-289">next == 0 &amp;&amp; time &gt;= 2</label>
 			<label kind="synchronisation" x="-340" y="-306">NS_TurnGreen?</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-586" y="-289">next == 0</label>
+			<label kind="guard" x="-586" y="-289">next == 0 &amp;&amp; time &gt;= 2</label>
 			<label kind="synchronisation" x="-595" y="-306">EW_TurnGreen?</label>
 			<nail x="-408" y="-289"/>
 		</transition>
@@ -302,49 +313,54 @@ clock t;</declaration>
 	</template>
 	<template>
 		<name>Controller</name>
-		<location id="id27" x="0" y="0">
+		<declaration>clock time;</declaration>
+		<location id="id28" x="0" y="0" color="#c0c0c0">
 			<name x="-8" y="-34">Idle</name>
 		</location>
-		<location id="id28" x="-68" y="136">
+		<location id="id29" x="-68" y="136" color="#ffffff">
+			<name x="-272" y="127">NS_ControllerTurningGreen</name>
 			<committed/>
 		</location>
-		<location id="id29" x="76" y="136">
+		<location id="id30" x="76" y="136" color="#ffffff">
+			<name x="102" y="136">EW_ControllerTurningGreen</name>
 			<committed/>
 		</location>
-		<location id="id30" x="0" y="-127">
+		<location id="id31" x="0" y="-127" color="#ffffff">
 			<committed/>
 		</location>
-		<init ref="id27"/>
+		<init ref="id28"/>
 		<transition>
-			<source ref="id30"/>
-			<target ref="id27"/>
+			<source ref="id31"/>
+			<target ref="id28"/>
 			<nail x="-59" y="-68"/>
 		</transition>
 		<transition>
-			<source ref="id27"/>
-			<target ref="id30"/>
+			<source ref="id28"/>
+			<target ref="id31"/>
 			<label kind="synchronisation" x="68" y="-76">TurnAllRed!</label>
 			<nail x="59" y="-59"/>
 		</transition>
 		<transition>
-			<source ref="id28"/>
-			<target ref="id27"/>
+			<source ref="id29"/>
+			<target ref="id28"/>
 			<nail x="-144" y="42"/>
 		</transition>
 		<transition>
-			<source ref="id29"/>
-			<target ref="id27"/>
+			<source ref="id30"/>
+			<target ref="id28"/>
 			<nail x="161" y="34"/>
 		</transition>
 		<transition>
-			<source ref="id27"/>
-			<target ref="id29"/>
+			<source ref="id28"/>
+			<target ref="id30"/>
 			<label kind="synchronisation" x="34" y="42">EW_TurnGreen!</label>
+			<label kind="assignment" x="18" y="68">time = 0</label>
 		</transition>
 		<transition>
-			<source ref="id27"/>
-			<target ref="id28"/>
+			<source ref="id28"/>
+			<target ref="id29"/>
 			<label kind="synchronisation" x="-119" y="42">NS_TurnGreen!</label>
+			<label kind="assignment" x="-50" y="68">time =0</label>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
@@ -363,8 +379,68 @@ system North, West, East, South, lc, c;
     </system>
 	<queries>
 		<query>
-			<formula></formula>
+			<formula>E&lt;&gt; lc.Red &amp;&amp; lc.time &gt; (24*3600)</formula>
 			<comment></comment>
+		</query>
+		<query>
+			<formula> A[] lc.NS_TurningGreen imply lc.time &gt;= 2</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula> A[] lc.EW_TurningGreen imply lc.time &gt;= 2</formula>
+			<comment>When switching from EW Green to NS Green, the red light should be on in all directions for at least 2 seconds</comment>
+		</query>
+		<query>
+			<formula> c.EW_ControllerTurningGreen --&gt; West.Green &amp;&amp; East.Green &amp;&amp; c.time &lt; 12</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; c.time &lt; 12</formula>
+			<comment>After NS_turnGreen!, North and South should be green within 10 or so seconds</comment>
+		</query>
+		<query>
+			<formula>A[] !(North.Green &amp;&amp; East.Green &amp;&amp; South.Green &amp;&amp; West.Green)</formula>
+			<comment>There should be no path where all lights are green</comment>
+		</query>
+		<query>
+			<formula>A[] East.Red imply !West.Green</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] !deadlock</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] 1&gt;0</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] West.Red imply !East.Green</formula>
+			<comment>If West is red, East should be red (maybe use NEXT)</comment>
+		</query>
+		<query>
+			<formula>A[] North.Red imply !(South.Green)</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>A[] North.Red imply (South.Red or South.TurningRed or South.TurningGreen)</formula>
+			<comment>If North is red, South should be red (maybe use NEXT)</comment>
+		</query>
+		<query>
+			<formula>A[] South.Red imply (North.Red or North.TurningRed or North.TurningGreen)</formula>
+			<comment>If South is red, North should be red (maybe use NEXT)</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.Green &amp;&amp; South.Green &amp;&amp; East.Red &amp;&amp; West.Red</formula>
+			<comment>There is a path to a state where North/South are red and East/West are green</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.Red &amp;&amp; South.Red &amp;&amp; East.Green &amp;&amp; West.Green</formula>
+			<comment>There is a path to a state where North/South are red and East/West are green</comment>
+		</query>
+		<query>
+			<formula>A&lt;&gt; North.Red &amp;&amp; South.Red &amp;&amp; East.Red &amp;&amp; West.Red</formula>
+			<comment> All paths should have a state where all lights are red</comment>
 		</query>
 	</queries>
 </nta>
