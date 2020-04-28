@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+// LightController
+chan turnGreen[4];
+chan turnRed[4];
+chan isGreen;
+chan isRed;
+
+// Controller
+chan TurnAllRed;
+chan NS_TurnGreen;
+chan EW_TurnGreen;</declaration>
+	<template>
+		<name x="5" y="5">LightBox</name>
+		<parameter>int id</parameter>
+		<declaration>// Place local declarations here.
+
+
+clock t;</declaration>
+		<location id="id0" x="544" y="144">
+			<name x="485" y="136">Red</name>
+		</location>
+		<location id="id1" x="841" y="144">
+			<name x="875" y="136">TurningGreen</name>
+			<label kind="invariant" x="858" y="161">t&lt;5</label>
+		</location>
+		<location id="id2" x="841" y="416">
+			<name x="875" y="399">Green</name>
+		</location>
+		<location id="id3" x="546" y="416">
+			<name x="442" y="407">TurningRed</name>
+			<label kind="invariant" x="536" y="433">t &lt; 5</label>
+		</location>
+		<init ref="id0"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="545" y="246">t&gt;3</label>
+			<label kind="synchronisation" x="545" y="263">isRed!</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="654" y="399">turnRed[id]?</label>
+			<label kind="assignment" x="671" y="416">t=0</label>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="850" y="255">t &gt; 3</label>
+			<label kind="synchronisation" x="850" y="272">isGreen!</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="646" y="119">turnGreen[id]?</label>
+			<label kind="assignment" x="671" y="144">t=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LightsController</name>
+		<declaration>int[0,2] next = 0;</declaration>
+		<location id="id4" x="-399" y="-289" color="#ff0000">
+			<name x="-409" y="-323">Red</name>
+		</location>
+		<location id="id5" x="476" y="-289" color="#ffa500">
+			<name x="466" y="-323">NS_TurningGreen</name>
+		</location>
+		<location id="id6" x="476" y="-68" color="#00ff00">
+			<name x="502" y="-77">NS_Green</name>
+		</location>
+		<location id="id7" x="-161" y="-68">
+			<name x="-195" y="-51">NS_TurningRed</name>
+		</location>
+		<location id="id8" x="-1292" y="-289" color="#ffa500">
+			<name x="-1402" y="-323">EW_TurningGreen</name>
+		</location>
+		<location id="id9" x="-1292" y="-68" color="#00ff00">
+			<name x="-1385" y="-77">EW_Green</name>
+		</location>
+		<location id="id10" x="-680" y="-68">
+			<name x="-740" y="-51">EW_TurningRed</name>
+		</location>
+		<location id="id11" x="77" y="-289">
+			<committed/>
+		</location>
+		<location id="id12" x="85" y="-68">
+			<committed/>
+		</location>
+		<location id="id13" x="-917" y="-289">
+			<committed/>
+		</location>
+		<location id="id14" x="-917" y="-68">
+			<committed/>
+		</location>
+		<location id="id15" x="-688" y="-289">
+			<committed/>
+		</location>
+		<location id="id16" x="-170" y="-289">
+		</location>
+		<location id="id17" x="-399" y="-161">
+		</location>
+		<location id="id18" x="-1105" y="-68">
+			<committed/>
+		</location>
+		<location id="id19" x="280" y="-68">
+			<committed/>
+		</location>
+		<init ref="id4"/>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="365" y="-17">TurnAllRed?</label>
+			<nail x="382" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id19"/>
+			<label kind="synchronisation" x="348" y="-127">EW_TurnGreen?</label>
+			<label kind="assignment" x="357" y="-144">next=2</label>
+			<nail x="382" y="-110"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id15"/>
+			<label kind="guard" x="-586" y="-391">next == 2</label>
+			<label kind="assignment" x="-586" y="-374">next = 0</label>
+			<nail x="-552" y="-348"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-314" y="-382">next == 1</label>
+			<label kind="assignment" x="-314" y="-365">next = 0</label>
+			<nail x="-289" y="-340"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="-1215" y="-17">TurnAllRed?</label>
+			<nail x="-1198" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="-1232" y="-127">NS_TurnGreen?</label>
+			<label kind="assignment" x="-1224" y="-144">next = 1</label>
+			<nail x="-1198" y="-110"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id4"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id16"/>
+			<label kind="synchronisation" x="-340" y="-306">NS_TurnGreen?</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-595" y="-306">EW_TurnGreen?</label>
+			<nail x="-408" y="-289"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id8"/>
+			<label kind="synchronisation" x="-1070" y="-306">turnGreen[3]!</label>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="-866" y="-85">turnRed[3]!</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-68" y="-93">turnRed[0]!</label>
+		</transition>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="119" y="-314">turnGreen[1]!</label>
+		</transition>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-331" y="-110">isRed?</label>
+			<nail x="-297" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-544" y="-102">isRed?</label>
+			<nail x="-569" y="-102"/>
+			<nail x="-467" y="-136"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="-1062" y="-93">turnRed[2]!</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id9"/>
+			<label kind="synchronisation" x="-1292" y="-195">isGreen?</label>
+		</transition>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id13"/>
+			<label kind="synchronisation" x="-841" y="-306">turnGreen[2]!</label>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id12"/>
+			<label kind="synchronisation" x="136" y="-93">turnRed[1]!</label>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="485" y="-187">isGreen?</label>
+		</transition>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-110" y="-314">turnGreen[0]!</label>
+		</transition>
+	</template>
+	<template>
+		<name>Controller</name>
+		<location id="id20" x="0" y="0">
+			<name x="-8" y="-34">Idle</name>
+		</location>
+		<location id="id21" x="-68" y="136">
+			<committed/>
+		</location>
+		<location id="id22" x="76" y="136">
+			<committed/>
+		</location>
+		<location id="id23" x="0" y="-127">
+			<committed/>
+		</location>
+		<init ref="id20"/>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id20"/>
+			<nail x="-59" y="-68"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id23"/>
+			<label kind="synchronisation" x="68" y="-76">TurnAllRed!</label>
+			<nail x="59" y="-59"/>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id20"/>
+			<nail x="-144" y="42"/>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id20"/>
+			<nail x="161" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="34" y="42">EW_TurnGreen!</label>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<label kind="synchronisation" x="-119" y="42">NS_TurnGreen!</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+North = LightBox(0);
+South = LightBox(1);
+East = LightBox(2);
+West = LightBox(3);
+
+
+lc = LightsController();
+
+c = Controller();
+
+// List one or more processes to be composed into a system.
+system North, West, East, South, lc, c;
+    </system>
+	<queries>
+		<query>
+			<formula></formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
