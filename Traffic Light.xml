@@ -27,20 +27,20 @@ clock t;</declaration>
 		</location>
 		<location id="id1" x="841" y="144" color="#ffa500">
 			<name x="875" y="136">TurningGreen</name>
-			<label kind="invariant" x="858" y="161">t&lt;2100</label>
+			<label kind="invariant" x="858" y="161">t&lt;4400</label>
 		</location>
 		<location id="id2" x="841" y="416" color="#00ff00">
 			<name x="875" y="399">Green</name>
 		</location>
 		<location id="id3" x="546" y="416" color="#ffff00">
 			<name x="442" y="407">TurningRed</name>
-			<label kind="invariant" x="536" y="433">t &lt;2100</label>
+			<label kind="invariant" x="536" y="433">t &lt;4400</label>
 		</location>
 		<init ref="id0"/>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="guard" x="545" y="246">t&gt;1900</label>
+			<label kind="guard" x="545" y="246">t&gt;4000</label>
 			<label kind="synchronisation" x="545" y="263">isRed[id]!</label>
 		</transition>
 		<transition>
@@ -52,7 +52,7 @@ clock t;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id2"/>
-			<label kind="guard" x="850" y="255">t &gt; 1900</label>
+			<label kind="guard" x="850" y="255">t &gt; 4000</label>
 			<label kind="synchronisation" x="850" y="272">isGreen[id]!</label>
 		</transition>
 		<transition>
@@ -421,19 +421,19 @@ system North, West, East, South, lc, c;
 			<comment></comment>
 		</query>
 		<query>
-			<formula>(c.NS_ControllerTurningGreen &amp;&amp; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red) --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 4200</formula>
+			<formula>(c.NS_ControllerTurningGreen &amp;&amp; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red) --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 4400</formula>
 			<comment></comment>
 		</query>
 		<query>
-			<formula>(c.ControllerTurningAllRed &amp;&amp; East.Green &amp;&amp; West.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 2100</formula>
+			<formula>(c.ControllerTurningAllRed &amp;&amp; East.Green &amp;&amp; West.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 4400</formula>
 			<comment></comment>
 		</query>
 		<query>
-			<formula>(c.ControllerTurningAllRed &amp;&amp; North.Green &amp;&amp; South.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 2100</formula>
+			<formula>(c.ControllerTurningAllRed &amp;&amp; North.Green &amp;&amp; South.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 4400</formula>
 			<comment>The system should be able to changefrom the state where the lights are green in the North and Southdirections to the state where all lights are red in less than XXXmilliseconds</comment>
 		</query>
 		<query>
-			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 6200</formula>
+			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 10800</formula>
 			<comment>After NS_turnGreen!, North and South should be green within 10 or so seconds</comment>
 		</query>
 		<query>
