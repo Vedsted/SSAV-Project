@@ -21,45 +21,50 @@ chan EW_TurnGreen;</declaration>
 		<declaration>// Place local declarations here.
 
 
-clock t;</declaration>
+clock waitInYellowClock;
+clock lightboxSyncClock;</declaration>
 		<location id="id0" x="544" y="144" color="#ffc0cb">
 			<name x="485" y="136">Red</name>
 		</location>
 		<location id="id1" x="841" y="144" color="#ffa500">
 			<name x="875" y="136">TurningGreen</name>
-			<label kind="invariant" x="858" y="161">t&lt;4400</label>
+			<label kind="invariant" x="858" y="161">waitInYellowClock&lt;4400</label>
 		</location>
 		<location id="id2" x="841" y="416" color="#00ff00">
 			<name x="875" y="399">Green</name>
 		</location>
 		<location id="id3" x="546" y="416" color="#ffff00">
 			<name x="442" y="407">TurningRed</name>
-			<label kind="invariant" x="536" y="433">t &lt;4400</label>
+			<label kind="invariant" x="536" y="433">waitInYellowClock &lt;4400</label>
 		</location>
 		<init ref="id0"/>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="guard" x="545" y="246">t&gt;4000</label>
+			<label kind="guard" x="545" y="246">waitInYellowClock&gt;4000</label>
 			<label kind="synchronisation" x="545" y="263">isRed[id]!</label>
+			<label kind="assignment" x="545" y="280">lightboxSyncClock=0</label>
 		</transition>
 		<transition>
 			<source ref="id2"/>
 			<target ref="id3"/>
 			<label kind="synchronisation" x="654" y="399">turnRed[id]?</label>
-			<label kind="assignment" x="671" y="416">t=0</label>
+			<label kind="assignment" x="671" y="416">lightboxSyncClock=0,
+waitInYellowClock=0</label>
 		</transition>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id2"/>
-			<label kind="guard" x="850" y="255">t &gt; 4000</label>
-			<label kind="synchronisation" x="850" y="272">isGreen[id]!</label>
+			<label kind="guard" x="833" y="204">waitInYellowClock &gt; 4000</label>
+			<label kind="synchronisation" x="824" y="221">isGreen[id]!</label>
+			<label kind="assignment" x="841" y="280">lightboxSyncClock=0</label>
 		</transition>
 		<transition>
 			<source ref="id0"/>
 			<target ref="id1"/>
 			<label kind="synchronisation" x="646" y="119">turnGreen[id]?</label>
-			<label kind="assignment" x="671" y="144">t=0</label>
+			<label kind="assignment" x="671" y="144">lightboxSyncClock=0,
+waitInYellowClock=0</label>
 		</transition>
 	</template>
 	<template>
@@ -107,6 +112,7 @@ clock time;</declaration>
 			<committed/>
 		</location>
 		<location id="id17" x="-850" y="-238" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id18" x="-1139" y="-170" color="#ffffff">
 			<committed/>
@@ -115,18 +121,25 @@ clock time;</declaration>
 			<committed/>
 		</location>
 		<location id="id20" x="-391" y="-323" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id21" x="-323" y="-323" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id22" x="-1173" y="-323" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id23" x="-1105" y="-323" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id24" x="-646" y="-238" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id25" x="-595" y="-289" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id26" x="-901" y="-272" color="#ffffff">
+			<committed/>
 		</location>
 		<location id="id27" x="-731" y="-340" color="#ffffff">
 			<committed/>
@@ -386,99 +399,243 @@ system North, West, East, South, lc, c;
 	<queries>
 		<query>
 			<formula>E&lt;&gt; lc.Red &amp;&amp; lc.time &gt; (24*3600*1000)</formula>
-			<comment></comment>
+			<comment>24 </comment>
 		</query>
 		<query>
 			<formula> A[] lc.NS_TurningGreen imply lc.time &gt;= 2000</formula>
-			<comment></comment>
+			<comment>22</comment>
 		</query>
 		<query>
 			<formula> A[] lc.EW_TurningGreen imply lc.time &gt;= 2000</formula>
-			<comment>When switching from EW Green to NS Green, the red light should be on in all directions for at least 2 seconds</comment>
+			<comment>23 When switching from EW Green to NS Green, the red light should be on in all directions for at least 2 seconds</comment>
 		</query>
 		<query>
-			<formula>A[] (West.TurningGreen &amp;&amp; East.TurningGreen) imply (West.t == East.t)</formula>
-			<comment></comment>
+			<formula>A[]((North.TurningGreen &amp;&amp; South.TurningGreen) imply (North.lightboxSyncClock == South.lightboxSyncClock))</formula>
+			<comment>26</comment>
 		</query>
 		<query>
-			<formula>A[]((West.Red &amp;&amp; East.Red) imply (West.t == East.t))</formula>
-			<comment></comment>
+			<formula>A[]((North.TurningRed &amp;&amp; South.TurningRed) imply (North.lightboxSyncClock == South.lightboxSyncClock))</formula>
+			<comment>26</comment>
 		</query>
 		<query>
-			<formula>A[] ((West.Green &amp;&amp; East.Green) imply (West.t == East.t))</formula>
-			<comment></comment>
+			<formula>A[]((North.Green &amp;&amp; South.Green) imply (North.lightboxSyncClock == South.lightboxSyncClock))</formula>
+			<comment>26</comment>
 		</query>
 		<query>
-			<formula>A[] SysTimer == c.time</formula>
-			<comment></comment>
+			<formula>A[]((North.Red &amp;&amp; South.Red) imply (North.lightboxSyncClock == South.lightboxSyncClock))</formula>
+			<comment>26</comment>
 		</query>
 		<query>
-			<formula> c.EW_ControllerTurningGreen --&gt; West.Green &amp;&amp; East.Green &amp;&amp; SysTimer &lt; 12500</formula>
-			<comment></comment>
+			<formula>A[] (West.TurningRed &amp;&amp; East.TurningRed) imply (West.lightboxSyncClock == East.lightboxSyncClock)</formula>
+			<comment>25</comment>
 		</query>
 		<query>
-			<formula>inf{North.Green &amp;&amp; South.Green}: glock</formula>
-			<comment></comment>
+			<formula>A[] (West.TurningGreen &amp;&amp; East.TurningGreen) imply (West.lightboxSyncClock == East.lightboxSyncClock)</formula>
+			<comment>25</comment>
+		</query>
+		<query>
+			<formula>A[] (West.Green &amp;&amp; East.Green) imply (West.lightboxSyncClock == East.lightboxSyncClock)</formula>
+			<comment>25</comment>
+		</query>
+		<query>
+			<formula>A[]((West.Red &amp;&amp; East.Red) imply (West.lightboxSyncClock == East.lightboxSyncClock))</formula>
+			<comment>25</comment>
+		</query>
+		<query>
+			<formula>c.EW_ControllerTurningGreen --&gt; West.Green &amp;&amp; East.Green &amp;&amp; SysTimer &lt; 10800</formula>
+			<comment> 17   </comment>
+		</query>
+		<query>
+			<formula>(c.EW_ControllerTurningGreen &amp;&amp; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red) --&gt; East.Green &amp;&amp; West.Green &amp;&amp; SysTimer &lt; 4400</formula>
+			<comment>21</comment>
 		</query>
 		<query>
 			<formula>(c.NS_ControllerTurningGreen &amp;&amp; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red) --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 4400</formula>
-			<comment></comment>
+			<comment>20</comment>
 		</query>
 		<query>
 			<formula>(c.ControllerTurningAllRed &amp;&amp; East.Green &amp;&amp; West.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 4400</formula>
-			<comment></comment>
+			<comment>19</comment>
 		</query>
 		<query>
 			<formula>(c.ControllerTurningAllRed &amp;&amp; North.Green &amp;&amp; South.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 4400</formula>
-			<comment>The system should be able to changefrom the state where the lights are green in the North and Southdirections to the state where all lights are red in less than XXXmilliseconds</comment>
+			<comment>18      The system should be able to changefrom the state where the lights are green in the North and Southdirections to the state where all lights are red in less than XXXmilliseconds</comment>
 		</query>
 		<query>
 			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 10800</formula>
-			<comment>After NS_turnGreen!, North and South should be green within 10 or so seconds</comment>
+			<comment>16      After NS_turnGreen!, North and South should be green within 10 or so seconds</comment>
 		</query>
 		<query>
 			<formula>A[] !(North.Green &amp;&amp; East.Green &amp;&amp; South.Green &amp;&amp; West.Green)</formula>
-			<comment>There should be no path where all lights are green</comment>
+			<comment>3       There should be no path where all lights are green</comment>
 		</query>
 		<query>
 			<formula>A[] East.Red imply !West.Green</formula>
-			<comment></comment>
+			<comment>14 </comment>
 		</query>
 		<query>
 			<formula>A[] !deadlock</formula>
-			<comment></comment>
+			<comment>15</comment>
 		</query>
 		<query>
 			<formula>A[] 1&gt;0</formula>
-			<comment></comment>
+			<comment>Sanity check to make sure the entire state space is evaluated</comment>
 		</query>
 		<query>
 			<formula>A[] West.Red imply !East.Green</formula>
-			<comment>If West is red, East should be red (maybe use NEXT)</comment>
+			<comment>13       If West is red, East should be red (maybe use NEXT)</comment>
 		</query>
 		<query>
 			<formula>A[] North.Red imply !(South.Green)</formula>
-			<comment></comment>
+			<comment>12     </comment>
 		</query>
 		<query>
 			<formula>A[] North.Red imply (South.Red or South.TurningRed or South.TurningGreen)</formula>
-			<comment>If North is red, South should be red (maybe use NEXT)</comment>
+			<comment>12     If North is red, South should be red (maybe use NEXT)</comment>
 		</query>
 		<query>
 			<formula>A[] South.Red imply (North.Red or North.TurningRed or North.TurningGreen)</formula>
-			<comment>If South is red, North should be red (maybe use NEXT)</comment>
+			<comment>11        If South is red, North should be red (maybe use NEXT)</comment>
 		</query>
 		<query>
 			<formula>E&lt;&gt; North.Green &amp;&amp; South.Green &amp;&amp; East.Red &amp;&amp; West.Red</formula>
-			<comment>There is a path to a state where North/South are red and East/West are green</comment>
+			<comment>9     There is a path to a state where North/South are red and East/West are green</comment>
 		</query>
 		<query>
 			<formula>E&lt;&gt; North.Red &amp;&amp; South.Red &amp;&amp; East.Green &amp;&amp; West.Green</formula>
-			<comment>There is a path to a state where North/South are red and East/West are green</comment>
+			<comment>10      There is a path to a state where North/South are red and East/West are green</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; East.TurningRed</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; East.TurningGreen</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; East.Red</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; East.Green</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; West.TurningRed</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; West.TurningGreen</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; West.Red</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; West.Green</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; South.TurningGreen</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; South.TurningRed</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; South.Red</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; South.Green</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.TurningGreen</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.TurningRed</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.Red</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>E&lt;&gt; North.Green</formula>
+			<comment>1</comment>
+		</query>
+		<query>
+			<formula>East.TurningRed --&gt; East.Red</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>East.TurningGreen --&gt; East.Green</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>West.TurningRed --&gt; West.Red</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>West.TurningGreen --&gt; West.Green</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>North.TurningGreen --&gt; North.Green</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>South.TurningRed --&gt; South.Red</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>South.TurningGreen --&gt; South.Green</formula>
+			<comment>2</comment>
+		</query>
+		<query>
+			<formula>A[] West.TurningGreen imply West.waitInYellowClock &lt; 4400</formula>
+			<comment>7</comment>
+		</query>
+		<query>
+			<formula>A[] East.TurningGreen imply East.waitInYellowClock &lt; 4400</formula>
+			<comment>7</comment>
+		</query>
+		<query>
+			<formula>A[] South.TurningGreen imply South.waitInYellowClock &lt; 4400</formula>
+			<comment>7</comment>
+		</query>
+		<query>
+			<formula>A[] North.TurningGreen imply North.waitInYellowClock &lt; 4400</formula>
+			<comment>7</comment>
+		</query>
+		<query>
+			<formula>A[] West.Green imply  West.waitInYellowClock &gt; 4000</formula>
+			<comment>6</comment>
+		</query>
+		<query>
+			<formula>A[] East.Green imply East.waitInYellowClock &gt; 4000</formula>
+			<comment>6</comment>
+		</query>
+		<query>
+			<formula>A[] South.Green imply South.waitInYellowClock &gt; 4000</formula>
+			<comment>6</comment>
+		</query>
+		<query>
+			<formula>A[] North.Green imply North.waitInYellowClock &gt; 4000</formula>
+			<comment>6</comment>
+		</query>
+		<query>
+			<formula>North.TurningRed --&gt; North.Red</formula>
+			<comment>2</comment>
 		</query>
 		<query>
 			<formula>A&lt;&gt; North.Red &amp;&amp; South.Red &amp;&amp; East.Red &amp;&amp; West.Red</formula>
-			<comment> All paths should have a state where all lights are red</comment>
+			<comment>8    All paths should have a state where all lights are red</comment>
 		</query>
 	</queries>
 </nta>
