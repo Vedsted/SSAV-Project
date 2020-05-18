@@ -27,20 +27,20 @@ clock t;</declaration>
 		</location>
 		<location id="id1" x="841" y="144" color="#ffa500">
 			<name x="875" y="136">TurningGreen</name>
-			<label kind="invariant" x="858" y="161">t&lt;5</label>
+			<label kind="invariant" x="858" y="161">t&lt;2100</label>
 		</location>
 		<location id="id2" x="841" y="416" color="#00ff00">
 			<name x="875" y="399">Green</name>
 		</location>
 		<location id="id3" x="546" y="416" color="#ffff00">
 			<name x="442" y="407">TurningRed</name>
-			<label kind="invariant" x="536" y="433">t &lt;5</label>
+			<label kind="invariant" x="536" y="433">t &lt;2100</label>
 		</location>
 		<init ref="id0"/>
 		<transition>
 			<source ref="id3"/>
 			<target ref="id0"/>
-			<label kind="guard" x="545" y="246">t&gt;3</label>
+			<label kind="guard" x="545" y="246">t&gt;1900</label>
 			<label kind="synchronisation" x="545" y="263">isRed[id]!</label>
 		</transition>
 		<transition>
@@ -52,7 +52,7 @@ clock t;</declaration>
 		<transition>
 			<source ref="id1"/>
 			<target ref="id2"/>
-			<label kind="guard" x="850" y="255">t &gt; 3</label>
+			<label kind="guard" x="850" y="255">t &gt; 1900</label>
 			<label kind="synchronisation" x="850" y="272">isGreen[id]!</label>
 		</transition>
 		<transition>
@@ -68,7 +68,7 @@ clock t;</declaration>
 clock time;</declaration>
 		<location id="id4" x="-731" y="-391" color="#ffc0cb">
 			<name x="-731" y="-425">Red</name>
-			<label kind="invariant" x="-782" y="-442">next == 0 || time &lt;= 2</label>
+			<label kind="invariant" x="-782" y="-442">next == 0 || time &lt;= 2000</label>
 		</location>
 		<location id="id5" x="-357" y="-391" color="#ffa500">
 			<name x="-374" y="-425">NS_TurningGreen</name>
@@ -209,14 +209,14 @@ clock time;</declaration>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-918" y="-459">next == 2 &amp;&amp; time &gt;= 2</label>
+			<label kind="guard" x="-918" y="-459">next == 2 &amp;&amp; time &gt;= 2000</label>
 			<label kind="assignment" x="-918" y="-442">next = 0</label>
 			<nail x="-850" y="-442"/>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-612" y="-459">next == 1 &amp;&amp; time &gt;= 2</label>
+			<label kind="guard" x="-612" y="-459">next == 1 &amp;&amp; time &gt;= 2000</label>
 			<label kind="assignment" x="-612" y="-442">next = 0</label>
 			<nail x="-629" y="-425"/>
 		</transition>
@@ -241,13 +241,13 @@ clock time;</declaration>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id16"/>
-			<label kind="guard" x="-697" y="-391">next == 0 &amp;&amp; time &gt;= 2</label>
+			<label kind="guard" x="-697" y="-391">next == 0 &amp;&amp; time &gt;= 2000</label>
 			<label kind="synchronisation" x="-680" y="-408">NS_TurnGreen?</label>
 		</transition>
 		<transition>
 			<source ref="id4"/>
 			<target ref="id15"/>
-			<label kind="guard" x="-901" y="-391">next == 0 &amp;&amp; time &gt;= 2</label>
+			<label kind="guard" x="-901" y="-391">next == 0 &amp;&amp; time &gt;= 2000</label>
 			<label kind="synchronisation" x="-884" y="-408">EW_TurnGreen?</label>
 		</transition>
 		<transition>
@@ -327,6 +327,7 @@ clock time;</declaration>
 			<committed/>
 		</location>
 		<location id="id31" x="0" y="-127" color="#ffffff">
+			<name x="-10" y="-161">ControllerTurningAllRed</name>
 			<committed/>
 		</location>
 		<init ref="id28"/>
@@ -339,6 +340,8 @@ clock time;</declaration>
 			<source ref="id28"/>
 			<target ref="id31"/>
 			<label kind="synchronisation" x="68" y="-76">TurnAllRed!</label>
+			<label kind="assignment" x="29" y="-29">time =0,
+SysTimer = 0</label>
 			<nail x="59" y="-59"/>
 		</transition>
 		<transition>
@@ -382,15 +385,15 @@ system North, West, East, South, lc, c;
     </system>
 	<queries>
 		<query>
-			<formula>E&lt;&gt; lc.Red &amp;&amp; lc.time &gt; (24*3600)</formula>
+			<formula>E&lt;&gt; lc.Red &amp;&amp; lc.time &gt; (24*3600*1000)</formula>
 			<comment></comment>
 		</query>
 		<query>
-			<formula> A[] lc.NS_TurningGreen imply lc.time &gt;= 2</formula>
+			<formula> A[] lc.NS_TurningGreen imply lc.time &gt;= 2000</formula>
 			<comment></comment>
 		</query>
 		<query>
-			<formula> A[] lc.EW_TurningGreen imply lc.time &gt;= 2</formula>
+			<formula> A[] lc.EW_TurningGreen imply lc.time &gt;= 2000</formula>
 			<comment>When switching from EW Green to NS Green, the red light should be on in all directions for at least 2 seconds</comment>
 		</query>
 		<query>
@@ -410,7 +413,7 @@ system North, West, East, South, lc, c;
 			<comment></comment>
 		</query>
 		<query>
-			<formula> c.EW_ControllerTurningGreen --&gt; West.Green &amp;&amp; East.Green &amp;&amp; SysTimer &lt; 12</formula>
+			<formula> c.EW_ControllerTurningGreen --&gt; West.Green &amp;&amp; East.Green &amp;&amp; SysTimer &lt; 12500</formula>
 			<comment></comment>
 		</query>
 		<query>
@@ -418,7 +421,19 @@ system North, West, East, South, lc, c;
 			<comment></comment>
 		</query>
 		<query>
-			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 12</formula>
+			<formula>(c.NS_ControllerTurningGreen &amp;&amp; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red) --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 4200</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>(c.ControllerTurningAllRed &amp;&amp; East.Green &amp;&amp; West.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 2100</formula>
+			<comment></comment>
+		</query>
+		<query>
+			<formula>(c.ControllerTurningAllRed &amp;&amp; North.Green &amp;&amp; South.Green) --&gt; North.Red &amp;&amp; South.Red &amp;&amp; West.Red &amp;&amp; East.Red &amp;&amp; SysTimer &lt; 2100</formula>
+			<comment>The system should be able to changefrom the state where the lights are green in the North and Southdirections to the state where all lights are red in less than XXXmilliseconds</comment>
+		</query>
+		<query>
+			<formula> c.NS_ControllerTurningGreen --&gt; North.Green &amp;&amp; South.Green &amp;&amp; SysTimer &lt; 6200</formula>
 			<comment>After NS_turnGreen!, North and South should be green within 10 or so seconds</comment>
 		</query>
 		<query>

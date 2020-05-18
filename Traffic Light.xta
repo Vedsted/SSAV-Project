@@ -1,0 +1,150 @@
+// Place global declarations here.
+clock glock;
+clock SysTimer;
+
+
+// LightController
+chan turnGreen[4];
+chan turnRed[4];
+chan isGreen[4];
+chan isRed[4];
+
+// Controller
+chan TurnAllRed;
+chan NS_TurnGreen;
+chan EW_TurnGreen;
+
+process LightBox(int id) {
+clock t;
+state
+    /** */
+    Red {cost' == 1},
+    /** */
+    TurningGreen {t<5 && cost' == 2},
+    /** */
+    Green {cost' == 1},
+    /** */
+    TurningRed {t <5 && cost' == 1};
+init Red;
+trans
+    /** */
+    TurningRed -> Red { guard t>3; sync isRed[id]!; assign cost += 1;  },
+    /** */
+    Green -> TurningRed { sync turnRed[id]?; assign t=0,
+cost += 1;  },
+    /** */
+    TurningGreen -> Green { guard t > 3; sync isGreen[id]!; assign cost+=1;  },
+    /** */
+    Red -> TurningGreen { sync turnGreen[id]?; assign t=0,
+cost += 1;  };
+}
+
+process LightsController() {
+int[0,2] next = 0;
+clock time;
+state
+    Red {next == 0 || time <= 2},
+    NS_TurningGreen,
+    NS_Green,
+    NS_TurningRed,
+    EW_TurningGreen,
+    EW_Green,
+    EW_TurningRed,
+    L0,
+    L1,
+    L2,
+    L3,
+    L4,
+    L5,
+    L6,
+    L7,
+    L8,
+    L9,
+    L10,
+    L11,
+    L12,
+    L13,
+    L14,
+    L15,
+    L16;
+commit
+    L0,
+    L1,
+    L2,
+    L3,
+    L4,
+    L5,
+    L7,
+    L8,
+    L16;
+init Red;
+trans
+    L16 -> Red { assign time = 0;  },
+    L15 -> L16 { sync isRed[2]?;  },
+    L14 -> L16 { sync isRed[0]?;  },
+    NS_TurningRed -> L14 { sync isRed[1]?;  },
+    EW_TurningRed -> L15 { sync isRed[3]?;  },
+    L13 -> L16 { sync isRed[1]?;  },
+    L12 -> EW_Green { sync isGreen[2]?;  },
+    EW_TurningGreen -> L12 { sync isGreen[3]?;  },
+    EW_TurningGreen -> L11 { sync isGreen[2]?;  },
+    L9 -> NS_Green { sync isGreen[1]?;  },
+    L10 -> NS_Green { sync isGreen[0]?;  },
+    NS_TurningGreen -> L10 { sync isGreen[1]?;  },
+    NS_Green -> L8 { sync TurnAllRed?;  },
+    NS_Green -> L8 { sync EW_TurnGreen?; assign next=2;  },
+    Red -> L4 { guard next == 2 && time >= 2; assign next = 0;  },
+    Red -> L5 { guard next == 1 && time >= 2; assign next = 0;  },
+    EW_Green -> L7 { sync TurnAllRed?;  },
+    EW_Green -> L7 { sync NS_TurnGreen?; assign next = 1;  },
+    L6 -> L16 { sync isRed[3]?;  },
+    Red -> L5 { guard next == 0 && time >= 2; sync NS_TurnGreen?;  },
+    Red -> L4 { guard next == 0 && time >= 2; sync EW_TurnGreen?;  },
+    L2 -> EW_TurningGreen { sync turnGreen[3]!;  },
+    L3 -> EW_TurningRed { sync turnRed[3]!;  },
+    L1 -> NS_TurningRed { sync turnRed[0]!;  },
+    L0 -> NS_TurningGreen { sync turnGreen[1]!;  },
+    NS_TurningRed -> L13 { sync isRed[0]?;  },
+    EW_TurningRed -> L6 { sync isRed[2]?;  },
+    L7 -> L3 { sync turnRed[2]!;  },
+    L11 -> EW_Green { sync isGreen[3]?;  },
+    L4 -> L2 { sync turnGreen[2]!;  },
+    L8 -> L1 { sync turnRed[1]!;  },
+    NS_TurningGreen -> L9 { sync isGreen[0]?;  },
+    L5 -> L0 { sync turnGreen[0]!;  };
+}
+
+process Controller() {
+clock time;
+state
+    Idle,
+    NS_ControllerTurningGreen,
+    EW_ControllerTurningGreen,
+    L0;
+commit
+    NS_ControllerTurningGreen,
+    EW_ControllerTurningGreen,
+    L0;
+init Idle;
+trans
+    L0 -> Idle {  },
+    Idle -> L0 { sync TurnAllRed!;  },
+    NS_ControllerTurningGreen -> Idle {  },
+    EW_ControllerTurningGreen -> Idle {  },
+    Idle -> EW_ControllerTurningGreen { sync EW_TurnGreen!; assign time =0,
+SysTimer = 0;  },
+    Idle -> NS_ControllerTurningGreen { sync NS_TurnGreen!; assign time =0,
+SysTimer = 0;  };
+}
+North = LightBox(0);
+South = LightBox(1);
+East = LightBox(2);
+West = LightBox(3);
+
+
+lc = LightsController();
+
+c = Controller();
+
+// List one or more processes to be composed into a system.
+system North, West, East, South, lc, c;
